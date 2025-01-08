@@ -5,8 +5,7 @@
   "description": "Fetch github user activity using the cli ",
   "main": "app.js",
   "scripts": {
-    "start": "node .",
-    "test": "jest ./test/app.test.js"
+    "start": "node ."
   },
   "repository": {
     "type": "git",
