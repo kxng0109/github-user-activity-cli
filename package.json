@@ -1,0 +1,27 @@
+{
+  "name": "github-user-activity-cli",
+  "version": "1.0.0",
+  "description": "Fetch github user activity using the cli ",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kxng0109/github-user-activity-cli.git"
+  },
+  "keywords": [
+    "cli",
+    "github-api"
+  ],
+  "author": "Joshua Ike",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kxng0109/github-user-activity-cli/issues"
+  },
+  "homepage": "https://github.com/kxng0109/github-user-activity-cli#readme",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.0.0"
+  }
+}
