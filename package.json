@@ -1,10 +1,11 @@
 {
   "name": "github-user-activity-cli",
   "version": "1.0.0",
+  "type": "module",
   "description": "Fetch github user activity using the cli ",
   "main": "app.js",
   "scripts": {
-    "test": "npm ."
+    "test": "node ."
   },
   "repository": {
     "type": "git",
