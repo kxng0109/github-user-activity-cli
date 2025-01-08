@@ -61,7 +61,7 @@ const handleData = (jsonData) => {
 				}
 			case "PullRequestEvent":
 				return `- Opened a pull request in ${repoName}`;
-			case "ForkEvemt":
+			case "ForkEvent":
 				return `- Forked the repository ${repoName}`;
 			default:
 				return undefined;
@@ -74,11 +74,11 @@ const handleData = (jsonData) => {
 			messageArray.push(message);
 		}
 	});
-	
+
 	const filteredArray = messageArray.filter(
 		(data, index) => data !== messageArray[index + 1],
 	);
-	console.log(filteredArray);
+	console.log(chalk.green(filteredArray));
 };
 
 const fetchUser = (username) => {
@@ -95,6 +95,9 @@ const fetchUser = (username) => {
 	request(options, (res) => {
 		if (res.statusCode == 404) {
 			errorHandler(`User with the username ${username} not found`);
+		}
+		if(res.statusCode !== 200){
+			errorHandler(`Error occured while trying to fetch users details. Status: ${res.statusCode}`)
 		}
 
 		let data = "";
