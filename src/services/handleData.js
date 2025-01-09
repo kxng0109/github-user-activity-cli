@@ -1,17 +1,24 @@
 import chalk from "chalk";
 import getRepoName from "../utils/getRepoName.js";
 
-const EVENTS= Object.freeze({
-	PUSH: "PushEvent",
-	PUBLIC: "PublicEvent",
-	WATCH: "WatchEvent",
+const EVENTS = Object.freeze({
+	COMMIT_COMMENT: "CommitCommentEvent",
 	CREATE: "CreateEvent",
-	ISSUE_COMMENT: "IssueCommentEvent",
+	DELETE: "DeleteEvent",
+	FORK: "ForkEvent",
+	GOLLUM: "GollumEvent",
 	ISSUE: "IssuesEvent",
+	ISSUE_COMMENT: "IssueCommentEvent",
+	MEMBER: "MemberEvent",
+	PUBLIC: "PublicEvent",
 	PULL: "PullRequestEvent",
-	FORK: "ForkEvent"
-})
-
+	PULL_REVIEW: "PullRequestReviewEvent",
+	PULL_REVIEW_COMMENT: "PullRequestReviewCommentEvent",
+	PUSH: "PushEvent",
+	RELEASE: "ReleaseEvent",
+	SPONSORSHIP: "SponsorshipEvent",
+	WATCH: "WatchEvent",
+});
 
 const handleData = (jsonData) => {
 	let prevActivity = {};
@@ -19,7 +26,7 @@ const handleData = (jsonData) => {
 
 	const getMessage = (data) => {
 		let repoName = data.repo.name;
-		
+
 		switch (data.type) {
 			case EVENTS.PUSH:
 				const { prevType, prevID, commitCount = 0 } = prevActivity;
@@ -55,9 +62,27 @@ const handleData = (jsonData) => {
 					return `- Issue in ${repoName} was ${data.payload.action}`;
 				}
 			case EVENTS.PULL:
-				return `- Opened a pull request in ${repoName}`;
+			case EVENTS.PULL_REVIEW:
+				const actionType = [
+					"opened",
+					"edited",
+					"closed",
+					"reopened",
+					"created",
+				];
+				if (actionType.includes(data.payload.action)) {
+					return `- Pull request${data.type === EVENTS.PULL_REVIEW ? " review" : ""} in ${repoName} was ${data.payload.action}`;
+				} else {
+					return `- Action performed on their pull request in ${repoName}`;
+				}
 			case EVENTS.FORK:
 				return `- Forked the repository ${repoName}`;
+			case EVENTS.COMMIT_COMMENT:
+				return `- Created a commit comment in ${repoName}`;
+			case EVENTS.DELETE:
+				return `- Deleted their git ${data.payload.ref_type}`;
+			case EVENTS.RELEASE:
+				return `- ${data.payload.action} a release in ${repoName}`;
 			default:
 				return undefined;
 		}
