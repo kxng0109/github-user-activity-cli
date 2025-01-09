@@ -1,4 +1,17 @@
 import chalk from "chalk";
+import getRepoName from "../utils/getRepoName.js";
+
+const EVENTS= Object.freeze({
+	PUSH: "PushEvent",
+	PUBLIC: "PublicEvent",
+	WATCH: "WatchEvent",
+	CREATE: "CreateEvent",
+	ISSUE_COMMENT: "IssueCommentEvent",
+	ISSUE: "IssuesEvent",
+	PULL: "PullRequestEvent",
+	FORK: "ForkEvent"
+})
+
 
 const handleData = (jsonData) => {
 	let prevActivity = {};
@@ -8,7 +21,7 @@ const handleData = (jsonData) => {
 		let repoName = data.repo.name;
 		
 		switch (data.type) {
-			case "PushEvent":
+			case EVENTS.PUSH:
 				const { prevType, prevID, commitCount = 0 } = prevActivity;
 				if (data.type === prevType && data.repo.id === prevID) {
 					prevActivity.commitCount = commitCount + 1;
@@ -22,28 +35,28 @@ const handleData = (jsonData) => {
 					};
 					return `- Pushed 1 commit to ${repoName}`;
 				}
-			case "PublicEvent":
-				repoName = repoName.split("/")[1];
+			case EVENTS.PUBLIC:
+				repoName = getRepoName(repoName);
 				return `- Made thier repository, "${repoName}", public`;
-			case "WatchEvent":
+			case EVENTS.WATCH:
 				return `- Started watching the repository ${repoName}`;
-			case "CreateEvent":
+			case EVENTS.CREATE:
 				if (!data.payload.ref) {
-					repoName = repoName.split("/")[1];
+					repoName = getRepoName(repoName);
 					return `- Created the repository "${repoName}"`;
 				}
 				break;
-			case "IssueCommentEvent":
+			case EVENTS.ISSUE_COMMENT:
 				return `- Commented on an issue in ${repoName}`;
-			case "IssuesEvent":
+			case EVENTS.ISSUE:
 				if (data.payload.action === "created") {
 					return `- Created an issue in ${repoName}`;
 				} else {
 					return `- Issue in ${repoName} was ${data.payload.action}`;
 				}
-			case "PullRequestEvent":
+			case EVENTS.PULL:
 				return `- Opened a pull request in ${repoName}`;
-			case "ForkEvent":
+			case EVENTS.FORK:
 				return `- Forked the repository ${repoName}`;
 			default:
 				return undefined;
